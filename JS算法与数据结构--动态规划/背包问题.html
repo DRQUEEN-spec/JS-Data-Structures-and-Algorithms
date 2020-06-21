@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div>
+        <h1>
+            动态规划之背包问题
+        </h1>
+        <p>
+            问题描述：
+        <p>
+            有一个容量为 V 的背包，和一些物品。这些物品分别有两个属性，体积 w 和价值 v，每种物品只有一个。要求用这个背包装下价值尽可能多的物品，求该最大价值，背包可以不被装满。
+        </p>
+        </p>
+    </div>
+    <script>
+        function knapSack(capacity, weights, values, n) {
+            // 初始化二维数组
+            const kS = [];
+            for (let i = 0; i <= n; i++) {
+                kS[i] = [];
+            }
+            // js不支持类似C语言中的二维数组的表示方式，以下用 (a[i])[j] 表示二维数组 a[i][j]
+            for (let i = 0; i <= n; i++) {
+                for (let j = 0; j <= capacity; j++) {
+                    // 忽略矩阵的第一行和第一列
+                    if (i === 0 || j === 0) {
+                        (kS[i])[j] = 0;
+                    } else if (weights[i - 1] <= j) {
+                        // 此处 第i个物品的重量 小于 当前j的值
+                        // a = 当前物品的价值 + 除去当前物品重量剩下的背包容量外能承受的物品的最高价值
+                        const a = values[i - 1] + (kS[i - 1])[j - weights[i - 1]];
+                        const b = (kS[i - 1])[j];
+                        // max(a, b)
+                        (kS[i])[j] = a > b ? a : b;
+                    } else {
+                        // 如果超出容量就用上一次的值
+                        (kS[i])[j] = (kS[i - 1])[j];
+                    }
+                }
+            }
+            return (kS[n])[capacity];
+        }
+
+        // 测试案例
+        const values = [3, 4, 5], //物品价值
+            weights = [2, 3, 4],  //物品重量
+            capacity = 5,         //背包可承受的最大重量
+            n = values.length;    //物品个数
+
+        console.log(knapSack(capacity, weights, values, n))
+    </script>
+</body>
+
+</html>
